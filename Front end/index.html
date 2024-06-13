@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Stocks Notification Distributed Publisher Subscriber</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico"/>
+
+    <!-- Google Fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans|Catamaran:100,200,300,400,500,600,700,800,900|Lato:100,100i,300,300i,400,400i,700,700i,900,900i' rel='stylesheet'/>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Font Awesome -->
+    <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+
+    <!-- Core theme CSS (includes Bootstrap) -->
+    <link href="css/styles.css" rel="stylesheet"/>
+
+    <style>
+        html, body {
+            background: linear-gradient(135deg, #ffcc33, #ff3366);
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: auto;
+        }
+
+        .subscriber, .publisher {
+            border: 3px solid white;
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            padding: 20px;
+            margin: 10px auto;
+            background: rgba(236, 97, 109, 0.183);
+            border-radius: 10px;
+        }
+
+        .textbox-design {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: flex; /* Add flex display */
+            flex-direction: column;
+            /* justify-content: center; Center align items horizontally */
+            align-items: center; /* Center align items vertically */
+        }
+
+        .textbox-design input {
+            width: 65%;
+            margin-right: 5px;
+            margin-bottom: 10px;
+        }
+
+        .textbox-design button {
+            width: 30%;
+            margin-bottom: 10px;
+        }
+
+        h1, h2 {
+            font-weight: 200;
+            color: white;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 60px;
+        }
+
+        h2 {
+            font-size: 40px;
+        }
+
+        #input_area {
+            text-align: center;
+            padding: 20px;
+            font-family: 'Open Sans', 'sans-serif';
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: rgba(221, 220, 220, 0);
+            text-align: center;
+        }
+
+        li {
+            display: inline;
+        }
+
+        li a {
+            display: inline-block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover:not(.active) {
+            background-color: #fcfafa;
+        }
+
+        .active {
+            background-color: #aa7604;
+        }
+
+        .btn-secondary {
+            border-radius: 1.3rem;
+        }
+    </style>
+</head>
+<body>
+<!-- Navigation -->
+<ul>
+    <li><a href="" class="active">Home</a></li>
+</ul>
+
+<br>
+
+<!-- Publishers and Subscribers Sections -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h2 style="padding-top: 75px;">Publishers</h2>
+            <div id="add_rem_pub" class="textbox-design">
+                <input type="text" class="form-control" placeholder="Publisher Name">
+                <button type="button" class="btn btn-secondary btn-lg">Add</button>
+                <button type="button" class="btn btn-secondary btn-lg">Remove</button>
+            </div>
+            <div id="list-of-publishers">
+                {{#list_of_publishers}}
+                <div class="publisher">
+                    <h5>{{name}}</h5>
+                    <input type="text" class="form-control" placeholder="StockName">
+                    <textarea class="form-control" placeholder="Price"></textarea><br>
+                    <button class="btn btn-secondary btn-md">Publish</button>
+                    <ol>
+                        {{#WatchList}}
+                        <li>
+                            <b>{{StockName}}</b>
+                            {{Price}}<br>
+                        </li>
+                        {{/WatchList}}
+                    </ol>
+                </div>
+                {{/list_of_publishers}}
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <h2 style="padding-top: 75px;">Subscribers</h2>
+            <div id="add_rem_sub" class="textbox-design">
+                <input type="text" class="form-control" placeholder="Subscriber Name">
+                <button type="button" class="btn btn-secondary btn-lg">Add</button>
+                <button type="button" class="btn btn-secondary btn-lg">Remove</button>
+            </div>
+            <div id="list-of-subscribers">
+                {{#list_of_subscribers}}
+                <div class="subscriber">
+                    <h5>{{name}}</h5>
+                    <input type="text" class="form-control" placeholder="Your Stock of Interest"><br>
+                    <button type="button" class="btn btn-secondary btn-md">Subscribe</button>
+                    <br><br>
+                    <h7>Subscriptions</h7>
+                    <ol class="StockNames">
+                        {{#StockNames}}
+                        <li>{{.}}</li>
+                        {{/StockNames}}
+                    </ol>
+                    <h7>Updates</h7>
+                    <ul class="sub_notif_list" style="background-color:white">
+                        {{#sub_notif_list}}
+                        <li>{{StockName}}: {{Price}}<br>&emsp;-posted by <i>{{name}}</i></li><br>
+                        {{/sub_notif_list}}
+                    </ul>
+                </div>
+                {{/list_of_subscribers}}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Including JS scripts -->
+<script src='commons/jquery/dist/jquery.js'></script>
+<script src='commons/bootstrap/dist/js/bootstrap.min.js'></script>
+<script src='commons/mustache/mustache.js'></script>
+<script src='crudHandler.js'></script>
+<script src='helperFunction.js'></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDzwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

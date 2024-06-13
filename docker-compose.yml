@@ -1,0 +1,78 @@
+version: "3"
+
+services:
+  server1:
+    build: ./server1
+    stdin_open: true
+    tty: true
+    ports:
+      - 8040:8040
+    networks:
+      - pub-sub-distributed-rendezvous
+    container_name: server1
+
+  server2:
+    build: ./server2
+    stdin_open: true
+    tty: true
+    ports:
+      - 8041:8041
+    networks:
+      - pub-sub-distributed-rendezvous
+    depends_on:
+      - server1
+    container_name: server2
+
+
+  server3:
+    build: ./server3
+    stdin_open: true
+    tty: true
+    ports:
+      - 8042:8042
+    networks:
+      - pub-sub-distributed-rendezvous
+    depends_on:
+      - server1
+      - server2
+    container_name: server3
+
+  client1:
+    build: ./client1
+    stdin_open: true
+    tty: true
+    networks:
+      - pub-sub-distributed-rendezvous
+    depends_on:
+      - server1
+      - server2
+      - server3
+    container_name: Manali
+
+  client2:
+    build: ./client2
+    stdin_open: true
+    tty: true
+    networks:
+      - pub-sub-distributed-rendezvous
+    depends_on:
+      - server1
+      - server2
+      - server3
+    container_name: Gowri
+
+  client3:
+    build: ./client3
+    stdin_open: true
+    tty: true
+    networks:
+      - pub-sub-distributed-rendezvous
+    depends_on:
+      - server1
+      - server2
+      - server3
+    container_name: Priyanka
+
+networks:
+  pub-sub-distributed-rendezvous:
+    driver: bridge
